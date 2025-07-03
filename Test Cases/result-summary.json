@@ -1,0 +1,331 @@
+{
+  "root_group": {
+    "groups": [],
+    "checks": [
+        {
+          "passes": 10,
+          "fails": 0,
+          "name": "test logged in",
+          "path": "::test logged in",
+          "id": "a17087c0df769893e93730e6c4d0158a"
+        },
+        {
+          "path": "::test received token",
+          "id": "512e4a2bad18fb9268a58f8497489c62",
+          "passes": 10,
+          "fails": 0,
+          "name": "test received token"
+        },
+        {
+          "path": "::javier logged in",
+          "id": "40651d6a050dca1392fc70b2167423ef",
+          "passes": 10,
+          "fails": 0,
+          "name": "javier logged in"
+        },
+        {
+          "fails": 0,
+          "name": "javier received token",
+          "path": "::javier received token",
+          "id": "e1a52614bfd91c93fe99259de13638f7",
+          "passes": 10
+        },
+        {
+          "fails": 1,
+          "name": "emi logged in",
+          "path": "::emi logged in",
+          "id": "536129bb76b69ceaa613bb7c188bf7d1",
+          "passes": 9
+        },
+        {
+          "id": "6ac7ee34f3ed234afc1bb9130707d4c8",
+          "passes": 9,
+          "fails": 1,
+          "name": "emi received token",
+          "path": "::emi received token"
+        },
+        {
+          "id": "d3c934994d98c1d9bbb8772678b6a77c",
+          "passes": 9,
+          "fails": 0,
+          "name": "mustafiz logged in",
+          "path": "::mustafiz logged in"
+        },
+        {
+          "passes": 9,
+          "fails": 0,
+          "name": "mustafiz received token",
+          "path": "::mustafiz received token",
+          "id": "7c7697d94c53ee6b30290afc6ea482b2"
+        },
+        {
+          "fails": 0,
+          "name": "clark logged in",
+          "path": "::clark logged in",
+          "id": "d55c3bd230a4f884674bd02e86c4e74d",
+          "passes": 9
+        },
+        {
+          "name": "clark received token",
+          "path": "::clark received token",
+          "id": "771d2f77b2ede397127c9fa507d4146a",
+          "passes": 9,
+          "fails": 0
+        },
+        {
+          "name": "curtis01 logged in",
+          "path": "::curtis01 logged in",
+          "id": "2dc922fb6066911e73678fa6574be2ad",
+          "passes": 9,
+          "fails": 0
+        },
+        {
+          "path": "::curtis01 received token",
+          "id": "b8a5b1c5d056c019bc110dc5ec9c921e",
+          "passes": 9,
+          "fails": 0,
+          "name": "curtis01 received token"
+        },
+        {
+          "path": "::ana logged in",
+          "id": "4cac8bf8507942d6ae69d699a885acb1",
+          "passes": 18,
+          "fails": 0,
+          "name": "ana logged in"
+        },
+        {
+          "passes": 18,
+          "fails": 0,
+          "name": "ana received token",
+          "path": "::ana received token",
+          "id": "49ec2c1448b95868b5b416d1672dc220"
+        },
+        {
+          "name": "vaugh logged in",
+          "path": "::vaugh logged in",
+          "id": "a45b195358e8ac0988f6a3867dd00d91",
+          "passes": 9,
+          "fails": 0
+        },
+        {
+          "name": "vaugh received token",
+          "path": "::vaugh received token",
+          "id": "7786c8c6255f9f2bacc0cb7c5ffe2daa",
+          "passes": 9,
+          "fails": 0
+        },
+        {
+          "fails": 0,
+          "name": "mark logged in",
+          "path": "::mark logged in",
+          "id": "6dbeb6312b98e7e316a7330d2a15c5ac",
+          "passes": 9
+        },
+        {
+          "name": "mark received token",
+          "path": "::mark received token",
+          "id": "c342bffa88f62db4f27807196deca650",
+          "passes": 9,
+          "fails": 0
+        }
+      ],
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  },
+  "state": {
+    "isStdOutTTY": true,
+    "isStdErrTTY": true,
+    "testRunDurationMs": 65774.0559
+  },
+  "metrics": {
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 5761.338159139785,
+        "min": 4048.4422,
+        "med": 5828.7928,
+        "max": 7654.0703,
+        "p(90)": 6640.697679999999,
+        "p(95)": 6905.441
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 698.7976,
+        "p(90)": 442.0743199999984,
+        "p(95)": 558.9241599999999,
+        "avg": 62.907648387096785,
+        "min": 0
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 7655.0771,
+        "p(90)": 6640.762559999999,
+        "p(95)": 6905.441,
+        "avg": 5761.554523655915,
+        "min": 4048.4422,
+        "med": 5828.7928
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.010752688172043012,
+        "passes": 1,
+        "fails": 92
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 39160,
+        "rate": 595.3715255075216
+      }
+    },
+    "http_reqs": {
+      "contains": "default",
+      "values": {
+        "count": 93,
+        "rate": 1.4139313552655646
+      },
+      "type": "counter"
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 1.3707,
+        "p(90)": 0.8968599999999999,
+        "p(95)": 1.0106199999999999,
+        "avg": 0.20501182795698925,
+        "min": 0
+      }
+    },
+    "iterations": {
+      "values": {
+        "count": 93,
+        "rate": 1.4139313552655646
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 10,
+        "min": 10,
+        "max": 10
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 6860.219866666667,
+        "min": 5055.4292,
+        "med": 6840.4056,
+        "max": 9482.7248,
+        "p(90)": 7931.36964,
+        "p(95)": 8609.873339999998
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 28.499165591397848,
+        "min": 0,
+        "med": 0,
+        "max": 265.7862,
+        "p(90)": 211.56447999999926,
+        "p(95)": 264.9898
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "values": {
+        "min": 4048.4422,
+        "med": 5832.86145,
+        "max": 7655.0771,
+        "p(90)": 6649.19123,
+        "p(95)": 6908.4164,
+        "avg": 5761.2252271739135
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "http_req_sending": {
+      "values": {
+        "min": 0,
+        "med": 0,
+        "max": 0.5297,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.011352688172043011
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 91.48926451612903,
+        "min": 0,
+        "med": 0,
+        "max": 964.3151,
+        "p(90)": 654.4883199999977,
+        "p(95)": 824.7573199999999
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.989247311827957,
+        "passes": 184,
+        "fails": 2
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 580204,
+        "rate": 8821.168043553782
+      }
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 3,
+        "min": 3,
+        "max": 10
+      }
+    }
+  }
+}
