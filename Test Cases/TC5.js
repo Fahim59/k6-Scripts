@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
 
 export const options = {
   stages: [
@@ -7,6 +8,10 @@ export const options = {
     { duration: '1m', target: 50 },   // steady load
     { duration: '10s', target: 0 },   // ramp-down
   ],
+    thresholds: {
+    http_req_duration: ['p(95) < 2000'], // 95% of requests < 2s
+    'checks': ['rate > 0.99'],           // at least 99% checks must pass
+    },
 };
 
 const user = { username: 'testmustafizur+5001@gmail.com', password: '11!!qqQQ' };
@@ -26,25 +31,34 @@ export function setup() {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       '__tenant': 'Default',
+      'User-Agent': 'k6-load-test'
     },
     timeout: '120s',
   };
 
   const loginRes = http.post(loginUrl, loginPayload, loginHeaders);
 
+  let token;
+  try {
+    token = loginRes.json('access_token');
+  } catch (err) {
+    console.error('❌ Failed to parse login response as JSON');
+    console.error(`Body: ${loginRes.body}`);
+  }
+
   check(loginRes, {
     '✅ Login returned 200': (r) => r.status === 200,
-    '✅ Access token exists': (r) => r.json('access_token') !== undefined,
+    '✅ Access token exists': () => token !== undefined,
   });
 
-  if (loginRes.status !== 200 || !loginRes.json('access_token')) {
+  if (loginRes.status !== 200 || !token) {
     console.error('❌ Login failed or access token missing');
     console.error(`Status: ${loginRes.status}`);
     console.error(`Body: ${loginRes.body}`);
     return { token: null };
   }
 
-  return { token: loginRes.json('access_token') };
+  return { token };
 }
 
 export default function (data) {
@@ -57,27 +71,30 @@ export default function (data) {
   const headers = {
     headers: {
       Authorization: `Bearer ${token}`,
-      __tenant: 'Default'
+      __tenant: 'Default',
+      'User-Agent': 'k6-load-test'
     }
   };
 
-  // ✅ Order Entry API sample hits
+  // ✅ Parallel requests to Order Entry APIs
   const orderEntryEndpoints = [
     '/api/app/discount/applicable-discount-codes',
     '/api/app/corporate-setting/corporate-setting',
   ];
 
-  for (const path of orderEntryEndpoints) {
-    const res = http.get(`${baseUrl}${path}`, headers);
-    check(res, {
-      [`✅ ${path} returned 200`]: (r) => r.status === 200
-    });
+  const requests = orderEntryEndpoints.map(path => ['GET', `${baseUrl}${path}`, null, headers]);
+  const responses = http.batch(requests);
 
+  responses.forEach((res, idx) => {
+    const path = orderEntryEndpoints[idx];
+    check(res, {
+      [`✅ ${path} returned 200`]: (r) => r.status === 200,
+    });
     if (res.status !== 200) {
       console.error(`❌ ${path} failed → ${res.status}`);
       console.error(res.body);
     }
-  }
+  });
 
   // 🔍 Random Product Search
   const productCodes = ['f003', 'f001', 'f005', 'f006', 'f008'];
@@ -86,16 +103,32 @@ export default function (data) {
 
   const searchRes = http.get(searchUrl, headers);
 
+  let hasData = false;
+  try {
+    const json = searchRes.json();
+    hasData = json && Object.keys(json).length > 0;
+  } 
+  catch (e) {
+    hasData = searchRes.body && searchRes.body.length > 0;
+  }
+
   check(searchRes, {
     [`🔍 Search '${searchKey}' returned 200`]: (r) => r.status === 200,
-    [`🔍 Search '${searchKey}' returned data`]: (r) => r.body && r.body.length > 0
+    [`🔍 Search '${searchKey}' returned data`]: () => hasData
   });
 
-  if (searchRes.status !== 200) {
+  if (searchRes.status !== 200 || !hasData) {
     console.error(`❌ Product search failed → ${searchKey}`);
     console.error(`Status: ${searchRes.status}`);
     console.error(`Body: ${searchRes.body}`);
   }
 
   sleep(1);
+}
+
+export function handleSummary(data) {
+  return {
+    'tc5.html': htmlReport(data),
+    'tc5_result-summary.json': JSON.stringify(data),
+  };
 }
