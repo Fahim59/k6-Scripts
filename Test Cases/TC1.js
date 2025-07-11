@@ -94,7 +94,7 @@ export default function () {
 export function handleSummary(data) {
   return {
     "tc1.html": htmlReport(data),
-    'result-summary.json': JSON.stringify(data),
-    //k6 run script.js --out csv=result.csv
+    'tc1_result-summary.json': JSON.stringify(data),
+    //k6 run script.js --out csv = tc_1result.csv
   };
 }
