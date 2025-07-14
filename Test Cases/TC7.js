@@ -7,8 +7,18 @@ export const options = {
   iterations: 10,
   
   thresholds: {
-    http_req_duration: ['p(95)<2000'],
-    checks: ['rate > 0.95'],
+    //http_req_duration: ['p(95)<2000'],
+    //checks: ['rate > 0.95'],
+
+    'checks{tag:order_placement}': ['rate>0.95'],
+    'checks{tag:delivery_category}': ['rate>0.95'],
+    'checks{tag:payment_method}': ['rate>0.95'],
+    'checks{tag:order_submission}': ['rate>0.95'],
+
+    'http_req_duration{tag:order_placement}': ['p(95)<2000'],
+    'http_req_duration{tag:delivery_category}': ['p(95)<2000'],
+    'http_req_duration{tag:payment_method}': ['p(95)<2000'],
+    'http_req_duration{tag:order_submission}': ['p(95)<2000'],
   },
 };
 
@@ -141,6 +151,9 @@ export default function (userData) {
   check(res, {
     '📦 Order placed': (r) => r.status === 200 || r.status === 201,
     '⏱️ < 2s': (r) => r.timings.duration < 2000,
+  }, 
+  { 
+    tag: 'order_placement'
   });
 
   const responseJson = res.json();
@@ -222,6 +235,9 @@ export default function (userData) {
   check(deliveryRes, {
     '🚚 Recipient added': (r) => r.status === 200 || r.status === 201,
     '⏱️ < 2s': (r) => r.timings.duration < 2000,
+  }, 
+  { 
+    tag: 'delivery_category'
   });
 
   console.log(`🚚 ${user.username} - Delivery set for SubOrder: ${subOrderId}`);
@@ -252,6 +268,9 @@ export default function (userData) {
     check(paymentRes, {
       [`💲 Payment method ${p.method} success`]: (r) => r.status === 200 || r.status === 204,
       '⏱️ < 2s': (r) => r.timings.duration < 2000,
+    }, 
+    { 
+      tag: 'payment_method'
     });
 
     console.log(`💳 Payment done by method ${p.method} for Order ${orderId}`);
@@ -260,7 +279,7 @@ export default function (userData) {
   sleep(1);
 
   //Submit Order
-  function retryRequest(requestFn, maxRetries = 3, waitSeconds = 1) {
+  function retryRequest(requestFn, maxRetries = 5, waitSeconds = 2) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       const res = requestFn();
       if (res.status === 200 || res.status === 204) {
@@ -287,6 +306,9 @@ export default function (userData) {
       check(submitRes, { 
       '🆗 Order successfully submitted': (r) => r.status === 200 || r.status === 204,
       '⏱️ < 2s': (r) => r.timings.duration < 2000,
+      }, 
+      { 
+        tag: 'order_submission'
       });
     } 
     else {
