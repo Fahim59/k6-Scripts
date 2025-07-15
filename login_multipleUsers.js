@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { textSummary } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 const userPool = [
   { username: 'garcia', password: '11!!qqQQ' },
@@ -10,8 +11,22 @@ const userPool = [
 ];
 
 export const options = {
-  vus: 5, // match number of users
-  duration: '5s',
+  stages: [
+    { duration: '30s', target: 5 },  // Ramp-up to 5 VUs
+    { duration: '1m', target: 5 },    // Maintain 5 VUs
+    { duration: '30s', target: 0 },   // Ramp-down
+  ],
+  thresholds: {
+    http_req_duration: ['p(95)<500'],  // 95% of requests should complete within 500ms
+    http_req_failed: ['rate<0.01'],     // Less than 1% failed requests
+    'checks{myTag:auth}': ['rate>0.99'] // 99% of auth checks should pass
+  },
+  ext: {
+    loadimpact: {
+      projectID: 'MAS Florafire',
+      name: 'OAuth2 Load Test'
+    }
+  }
 };
 
 export default function () {
@@ -41,13 +56,21 @@ export default function () {
     [`${user.username} token received`]: (r) => r.body.includes('access_token'),
   });
 
-  const token = loginRes.json().access_token;
-
-  if (!token) {
-    console.error(`❌ Token missing for ${user.username}`);
+  let token;
+  try {
+    const json = loginRes.json();
+    token = json.access_token;
+    
+    check(json, {
+      '✅ Response contains access_token': (j) => j.access_token !== undefined,
+      '✅ Token is not empty': (j) => j.access_token.length > 0,
+    }, { myTag: 'auth' });
+    
+    console.log(`✅ ${user.username} Access Token:`, token);
   } 
-  else {
-    console.log(`✅ ${user.username} token:`, token);
+  catch (e) {
+    console.error(`❌ Token missing for ${user.username}`);
+    return;
   }
 
   sleep(1);
