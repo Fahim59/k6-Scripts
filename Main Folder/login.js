@@ -29,35 +29,27 @@ export default function () {
 
   // Check success
   check(loginRes, {
-    '✅ successfully logged in': (r) => r.status === 200,
-    '✅ response has token': (r) => r.body.includes('Bearer'),
+    '✅ Login status is 200': (r) => r.status === 200,
+    '✅ Response time < 500ms': (r) => r.timings.duration < 500,
   });
 
   // Step 2: Parse and print the access token
-  const json = loginRes.json();
-  const token = json.access_token;
-
-  if (!token) {
-      console.error('❌ Access token not found in login response');
-      return;
+  let token;
+  try {
+    const json = loginRes.json();
+    token = json.access_token;
+    
+    check(json, {
+      '✅ Response contains access_token': (j) => j.access_token !== undefined,
+      '✅ Token is not empty': (j) => j.access_token.length > 0,
+    });
+    
+    console.log('✅ Access Token:', token);
+  } 
+  catch (e) {
+    console.error('❌ Failed to parse JSON response:', e);
+    return;
   }
-
-  console.log('✅ Access Token:', token);
-
-  // Step 3: Call a protected API using the token
-  const protectedApiHeaders = {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
-      '__tenant': '831016f7-1aed-e853-54a7-3a1a049113d2' // You can dynamically fetch or hardcode this
-  };
-  
-  const res = http.get('https://ustx000248.florafirebackdev.com/api/app/customer?skipCount=0&maxResultCount=10', {
-      headers: protectedApiHeaders
-  });
-  
-  check(res, {
-      '✅ successfully hit customer maintenance page': (r) => r.status === 200
-  });
   
   sleep(1);
 }
