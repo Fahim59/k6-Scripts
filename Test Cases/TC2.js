@@ -1,4 +1,4 @@
-//Maintain peak load of 100 concurrent users for 1 hour to verify sustained performance. (Maintain 25 VUs for 1 Hour)
+//Maintain peak load of 25 concurrent users for 1 hour to verify sustained performance. (Maintain 25 VUs for 1 Hour)
 
 import http from 'k6/http';
 import { check, sleep } from 'k6';
