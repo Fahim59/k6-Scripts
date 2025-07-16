@@ -41,7 +41,8 @@ export function setup() {
   let token;
   try {
     token = loginRes.json('access_token');
-  } catch (err) {
+  } 
+  catch (err) {
     console.error('❌ Failed to parse login response as JSON');
     console.error(`Body: ${loginRes.body}`);
   }
