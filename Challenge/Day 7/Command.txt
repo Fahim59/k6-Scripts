@@ -1,0 +1,1 @@
+$env:K6_WEB_DASHBOARD="true"; .\k6.exe run day1.js
